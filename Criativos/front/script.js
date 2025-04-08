@@ -39,15 +39,17 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
         resultadoDiv.innerHTML = `
             <div class="criativo-gerado">
                 <h3>Seu Prompt Publicitário:</h3>
-                <div class="conteudo-criativo">${prompt.replace(/\n/g, '<br>')}</div>
+                <div class="conteudo-criativo" id="conteudo-copiavel">${prompt.replace(/\n/g, '<br>')}</div>
             </div>`;
+
+            document.getElementById("copiar-resultado").style.display = "inline-block";
     }
 });
 
 
 function gerarPromptCriativo(dados) {
     let prompt = `Crie um prompt para gerar uma imagem publicitária para uma campanha de marketing altamente persuasiva. 
-O prompt deve ser envolvente, detalhado`;
+O prompt deve ser envolvente, detalhado. O prompt deve começar com: Crie uma imagem para uma campanha publicitária usando o novo método de criação de imagens do ChatGPT`;
 
     for (let chave in dados) {
         if (chave !== "Imagem de Referência") {
@@ -112,3 +114,19 @@ async function requisicaoChatGPTGOOGLE(dados, apikey) {
     const data = await response.json();
     return data.choices[0].message.content.trim();
 }
+
+
+document.getElementById('copiar-resultado').addEventListener('click', function () {
+    const resultadoHtml = document.getElementById('conteudo-copiavel');
+
+    // Cria um elemento temporário para extrair o texto sem as tags HTML
+    const temp = document.createElement("textarea");
+    temp.value = resultadoHtml.innerText;
+    document.body.appendChild(temp);
+    temp.select();
+    document.execCommand("copy");
+    document.body.removeChild(temp);
+
+    // Feedback visual
+    alert("Prompt copiado para a área de transferência!");
+});
