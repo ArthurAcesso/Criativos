@@ -28,30 +28,11 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
         "Observações Finais": document.getElementById("observacoes").value.trim()
     };
 
-    const imagemInput = document.getElementById("imagem");
-    if (imagemInput.files.length > 0) {
-        const file = imagemInput.files[0];
-        const reader = new FileReader();
-
-        reader.onload = async function () {
-            campos["Imagem de Referência"] = reader.result;
-
-            try {
-                const criativo = await requisicaoChatGPTGOOGLE(campos, apikey);
-                mostrarResultado(criativo);
-            } catch (error) {
-                resultadoDiv.innerHTML = `<div class="erro">Ocorreu um erro ao gerar o prompt: ${error.message}</div>`;
-            }
-        };
-
-        reader.readAsDataURL(file);
-    } else {
-        try {
-            const criativo = await requisicaoChatGPTGOOGLE(campos, apikey);
-            mostrarResultado(criativo);
-        } catch (error) {
-            resultadoDiv.innerHTML = `<div class="erro">Ocorreu um erro ao gerar o prompt: ${error.message}</div>`;
-        }
+    try {
+        const criativo = await requisicaoChatGPTGOOGLE(campos, apikey);
+        mostrarResultado(criativo);
+    } catch (error) {
+        resultadoDiv.innerHTML = `<div class="erro">Ocorreu um erro ao gerar o prompt: ${error.message}</div>`;
     }
 
     function mostrarResultado(prompt) {
@@ -63,9 +44,10 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
     }
 });
 
+
 function gerarPromptCriativo(dados) {
     let prompt = `Crie um prompt para gerar uma imagem publicitária para uma campanha de marketing altamente persuasiva. 
-O prompt deve ser envolvente, detalhado e seguir todas as diretrizes abaixo:\n\n🔹 **Detalhes da campanha:**\n`;
+O prompt deve ser envolvente, detalhado`;
 
     for (let chave in dados) {
         if (chave !== "Imagem de Referência") {
@@ -74,17 +56,24 @@ O prompt deve ser envolvente, detalhado e seguir todas as diretrizes abaixo:\n\n
     }
 
     prompt += `\n🔹 **Instruções adicionais**:
-- Coisa mais importante: comece o prompt falando *Crie uma imagem usando o novo método do ChatGPT de criação de imagens*.
-- O texto da imagem pode ser ajustado para um design mais atraente.
-- Não coloque um brilho branco atrás do texto.
-- Utilize um tom adequado para o público-alvo.
-- O prompt deve ser bem detalhado para que a IA gere imagens de alta qualidade.
-- O uso de fontes, cores e estilos visuais deve ser adaptado conforme necessário para otimizar a estética do anúncio.
-- Quero que o GPT **não use exatamente a frase, as palavras-chave e a chamada** que eu selecionei, mas sim crie *baseado* no que enviei.
-- Não quero que o CTA fique exatamente como eu coloquei, quero que o chat melhore conforme o contexto.
-- Não quero que a publicidade tenha muito texto, somente o necessário, **NO MÁXIMO 2 LINHAS**.
-- Quero que você abuse da sua criatividade.
-- Gere um prompt longo e descritivo para maximizar a qualidade da criação.`;
+Tema: Baseie-se nas minhas sugestões, mas recrie com criatividade (não use exatamente as mesmas palavras).
+
+Formato: Texto da imagem: Máximo de 2 linhas, direto e impactante.
+
+Visual: Atraente, com cores, fontes e estilo adaptados ao público-alvo.
+
+Evite: Brilho branco atrás do texto ou excesso de elementos.
+
+Qualidade: Seja detalhado no prompt para garantir alta qualidade.
+
+Priorize estética clean e comunicação clara.
+
+Tom: Adequado ao contexto (ex.: descontraído, profissional, inspirador).
+
+CTA (Chamada para Ação): Criativo e natural, integrado ao design.
+
+Exemplo de Estrutura (adaptável):
+"Crie uma imagem usando o novo método do ChatGPT de criação de imagens: [Descreva cena, paleta de cores, emoção desejada]. Inclua texto central como: '[Frase impactante em até 2 linhas]'. Estilo: [ex.: minimalista, futurista, vibrante]. Evite poluição visual."`;
 
     if (dados["Imagem de Referência"]) {
         prompt += `\n- Use como base visual a imagem de referência fornecida.`;
@@ -103,7 +92,7 @@ async function requisicaoChatGPTGOOGLE(dados, apikey) {
             "Authorization": `Bearer ${apikey}`
         },
         body: JSON.stringify({
-            model: "gpt-4", // ou "gpt-3.5-turbo"
+            model: "gpt-4", 
             messages: [
                 {
                     role: "user",
