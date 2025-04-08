@@ -1,0 +1,165 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Gerador de Criativos Publicitários</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+
+    <img class="logo" src="img/download.jpg" alt="Logo">
+
+    <div class="container">
+        
+        <h1>Gerador de Prompts Publicitários</h1>
+        
+        <form id="form-criativo" class="form-criativo">
+
+            <div class="form-group">
+                <label for="chave">Chave API:</label>
+                <input type="text" id="chave">
+            </div>
+
+            <div class="form-group">
+                <label for="empresa">Nome da Empresa:</label>
+                <input type="text" id="empresa">
+            </div>
+            
+            <div class="form-group">
+                <label for="setor">Setor da Empresa:</label>
+                <input type="text" id="setor">
+            </div>
+            
+            <div class="form-group">
+                <label for="publico">Público-alvo:</label>
+                <input type="text" id="publico">
+            </div>
+            
+            <div class="form-group">
+                <label for="produto">Qual é o produto/serviço:</label>
+                <input type="text" id="produto">
+            </div>
+            
+            <div class="form-group">
+                <label for="cores">Cores da Marca:</label>
+                <input type="text" id="cores" placeholder="Ex: Azul, Branco e Verde">
+            </div>
+            
+            <div class="form-group">
+                <label for="fonte">Fonte Desejada:</label>
+                <input type="text" id="fonte" placeholder="Ex: Arial, Roboto">
+            </div>
+            
+            <div class="form-group">
+                <label for="cenario">Background:</label>
+                <input type="text" id="cenario" placeholder="Ex: Escritório moderno, Natureza">
+            </div>
+            
+            <div class="form-group">
+                <label for="estilo">Estilo Visual:</label>
+                <input type="text" id="estilo" placeholder="Ex: Minimalista, Retrô">
+            </div>
+            
+            <div class="form-group">
+                <label for="mensagem">Mensagem Principal:</label>
+                <textarea id="mensagem" rows="3"></textarea>
+            </div>
+            
+            <div class="form-group">
+                <label for="cta">Chamada para Ação (CTA):</label>
+                <input type="text" id="cta" placeholder="Ex: Compre agora!">
+            </div>
+            
+            <div class="form-group">
+                <label for="formato">Formato do Anúncio:</label>
+                <select id="formato">
+                    <option value="">Selecione...</option>
+                    <option value="Banner">Banner</option>
+                    <option value="Redes Sociais">Post para Redes Sociais</option>
+                    <option value="Outdoor">Outdoor</option>
+                </select>
+            </div>
+
+            <!-- NOVOS CAMPOS ADICIONADOS -->
+            <div class="form-group">
+                <label for="plataforma">Plataforma do Anúncio:</label>
+                <select id="plataforma">
+                    <option value="">Selecione...</option>
+                    <option value="Google Ads">Google Ads</option>
+                    <option value="Meta Ads">Meta Ads (Facebook/Instagram)</option>
+                    <option value="TikTok Ads">TikTok Ads</option>
+                    <option value="LinkedIn Ads">LinkedIn Ads</option>
+                    <option value="Outros">Outros</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="tamanho">Tamanho do Criativo (Dimensões):</label>
+                <input type="text" id="tamanho" placeholder="Ex: 1080x1080, 1920x1080">
+            </div>
+
+            <div class="form-group">
+                <label for="tom">Tom da mensagem:</label>
+                <select id="tom">
+                    <option value="">Selecione...</option>
+                    <option value="Formal">Formal</option>
+                    <option value="Descontraído">Descontraído</option>
+                    <option value="Persuasivo">Persuasivo</option>
+                    <option value="Divertido">Divertido</option>
+                    <option value="Inspirador">Inspirador</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="sentimento">Sentimento Desejado:</label>
+                <select id="sentimento">
+                    <option value="">Selecione...</option>
+                    <option value="Confiança">Confiança</option>
+                    <option value="Urgência">Urgência</option>
+                    <option value="Exclusividade">Exclusividade</option>
+                    <option value="Inovação">Inovação</option>
+                    <option value="Alegria">Alegria</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="objetivo">Objetivo da Campanha:</label>
+                <select id="objetivo">
+                    <option value="">Selecione...</option>
+                    <option value="Engajamento">Engajamento</option>
+                    <option value="Tráfego">Tráfego</option>
+                    <option value="Conversões">Conversões</option>
+                    <option value="Reconhecimento de Marca">Reconhecimento de Marca</option>
+                </select>
+            </div>
+
+            <div class="form-group">
+                <label for="palavras-chave">Palavras-chave ou Frases de Impacto:</label>
+                <textarea id="palavras-chave" rows="2" placeholder="Ex: Promoção exclusiva, Aproveite agora, Oferta limitada"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="referencias">Referências ou Inspirações:</label>
+                <textarea id="referencias" rows="2" placeholder="Links ou exemplos de anúncios similares"></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="observacoes">Observações Finais:</label>
+                <textarea id="observacoes" rows="4" placeholder="Inclua informações adicionais ou detalhes específicos..."></textarea>
+            </div>
+
+            <div class="form-group">
+                <label for="imagem">Imagem para referência</label>
+                <input type="file" id="imagem" accept="image/*">
+            </div>
+
+            <button type="submit" class="submit-btn">Gerar Prompt</button>
+        </form>
+        
+        <div id="resultado-criativo" class="resultado-container"></div>
+    </div>
+
+    <script src="script.js"></script>
+</body>
+</html>
