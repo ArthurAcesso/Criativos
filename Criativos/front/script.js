@@ -4,10 +4,22 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
     const resultadoDiv = document.getElementById("resultado-criativo");
     resultadoDiv.innerHTML = '<div class="loader">Gerando seu prompt...</div>';
 
+    const arquivo = document.getElementById('pdf').files[0];
+    let textoPDF = "";
+    if (arquivo && arquivo.type === 'application/pdf') {
+        textoPDF = await lerPDF(arquivo);
+        console.log("Texto extraído do PDF:", textoPDF);
+
+    } else {
+        alert("Por favor, envie um arquivo PDF válido.");
+    }
+
     let apikey = document.getElementById("chave").value.trim();
 
     let campos = {
+        "Texto retirado do arquivo de identidade visual da empresa": textoPDF, 
         "Nome da Empresa": document.getElementById("empresa").value.trim(),
+        "Quantidade de criativos": document.getElementById("quantidade").value.trim(),
         "Setor da Empresa": document.getElementById("setor").value.trim(),
         "Público-alvo": document.getElementById("publico").value.trim(),
         "Qual produto ou serviço": document.getElementById("produto").value.trim(),
@@ -48,7 +60,7 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
 
 
 function gerarPromptCriativo(dados) {
-    let prompt = `Crie um prompt para gerar uma imagem publicitária para uma campanha de marketing altamente persuasiva. 
+    let prompt = `Crie um prompt para gerar imagens publicitária para uma campanha de marketing altamente persuasiva. 
 O prompt deve ser envolvente, detalhado. O prompt deve começar com: Crie uma imagem para uma campanha publicitária usando o novo método de criação de imagens do ChatGPT`;
 
     for (let chave in dados) {
@@ -130,3 +142,18 @@ document.getElementById('copiar-resultado').addEventListener('click', function (
     // Feedback visual
     alert("Prompt copiado para a área de transferência!");
 });
+
+async function lerPDF(file) {
+    const arrayBuffer = await file.arrayBuffer();
+    const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+    let textoFinal = '';
+
+    for (let i = 1; i <= pdf.numPages; i++) {
+        const page = await pdf.getPage(i);
+        const content = await page.getTextContent();
+        const textoPagina = content.items.map(item => item.str).join(' ');
+        textoFinal += textoPagina + '\n';
+    }
+
+    return textoFinal;
+}
