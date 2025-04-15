@@ -10,9 +10,7 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
         textoPDF = await lerPDF(arquivo);
         console.log("Texto extraído do PDF:", textoPDF);
 
-    } else {
-        alert("Por favor, envie um arquivo PDF válido.");
-    }
+    } 
 
     let apikey = document.getElementById("chave").value.trim();
 
