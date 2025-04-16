@@ -58,7 +58,7 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
 
 
 function gerarPromptCriativo(dados) {
-    let prompt = `Crie um prompt para gerar imagens (quantidade decidida pelo usuário) publicitária para uma campanha de marketing altamente persuasiva. 
+    let prompt = `Atue como um Designer Publicitário profissional e crie um prompt para gerar imagens (quantidade decidida pelo usuário) publicitária para uma campanha de marketing altamente persuasiva. 
 O prompt deve ser envolvente, detalhado. O prompt deve começar com: Crie uma imagem para uma campanha publicitária usando o novo método de criação de imagens do ChatGPT`;
 
     for (let chave in dados) {
@@ -70,7 +70,7 @@ O prompt deve ser envolvente, detalhado. O prompt deve começar com: Crie uma im
     prompt += `\n🔹 **Instruções adicionais**:
 Tema: Baseie-se nas minhas sugestões, mas recrie com criatividade (não use exatamente as mesmas palavras).
 
-Formato: Texto da imagem: Máximo de 2 linhas, direto e impactante.
+Formato: Texto da imagem: Máximo de 2 linhas, direto e impactante. PRESTE ATENÇÃO COM A ESCRITA CORRETA DO PORTUGUÊS
 
 Quantidade de imagens: deve ser usada a quantidade decidida pelo usuário
 
