@@ -1,3 +1,7 @@
+<!-- NÃO ESQUEÇA DE INCLUIR A BIBLIOTECA pdfjs -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/2.14.305/pdf.min.js"></script>
+
+<script>
 document.getElementById("form-criativo").addEventListener("submit", async function (event) {
     event.preventDefault();
 
@@ -9,8 +13,7 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
     if (arquivo && arquivo.type === 'application/pdf') {
         textoPDF = await lerPDF(arquivo);
         console.log("Texto extraído do PDF:", textoPDF);
-
-    } 
+    }
 
     let apikey = document.getElementById("chave").value.trim();
 
@@ -54,11 +57,34 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
                 <h3>Seu Prompt Publicitário:</h3>
                 <div class="conteudo-criativo" id="conteudo-copiavel">${prompt.replace(/\n/g, '<br>')}</div>
             </div>`;
-
-            document.getElementById("copiar-resultado").style.display = "inline-block";
+        document.getElementById("copiar-resultado").style.display = "inline-block";
     }
 });
 
+async function requisicaoChatGPTGOOGLE(campos, apikey) {
+    const prompt = gerarPromptCriativo(campos);
+
+    const response = await fetch("https://api.openai.com/v1/chat/completions", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apikey}`
+        },
+        body: JSON.stringify({
+            model: "gpt-4",
+            messages: [{ role: "user", content: prompt }],
+            temperature: 0.7
+        })
+    });
+
+    if (!response.ok) {
+        const erro = await response.text();
+        throw new Error("Erro ao gerar texto: " + erro);
+    }
+
+    const data = await response.json();
+    return data.choices[0].message.content.trim();
+}
 
 function gerarPromptCriativo(dados) {
     let prompt = `Atue como um Designer Publicitário profissional e crie um prompt para gerar imagens (quantidade decidida pelo usuário) publicitária para uma campanha de marketing altamente persuasiva. 
@@ -66,11 +92,11 @@ O prompt deve ser envolvente, detalhado. O prompt deve começar com: Crie uma im
 
     for (let chave in dados) {
         if (chave !== "Imagem de Referência") {
-            prompt += `- **${chave}**: ${dados[chave]}\n`;
+            prompt += `\n- **${chave}**: ${dados[chave]}`;
         }
     }
 
-    prompt += `\n🔹 **Instruções adicionais**:
+    prompt += `\n\n🔹 **Instruções adicionais**:
 Tema: Baseie-se nas minhas sugestões, mas recrie com criatividade (não use exatamente as mesmas palavras).
 
 Formato: Texto da imagem: Máximo de 2 linhas, direto e impactante. PRESTE ATENÇÃO COM A ESCRITA CORRETA DO PORTUGUÊS
@@ -100,43 +126,38 @@ Exemplo de Estrutura (adaptável):
 }
 
 async function gerarImagem(prompt, apikey) {
-  const response = await fetch("https://api.openai.com/v1/images/generations", {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-      "Authorization": `Bearer ${apikey}`
-    },
-    body: JSON.stringify({
-      model: "dall-e-3",
-      prompt: prompt,
-      n: 1,
-      size: "1024x1024",
-      quality: "standard"
-    })
-  });
+    const response = await fetch("https://api.openai.com/v1/images/generations", {
+        method: "POST",
+        headers: {
+            "Content-Type": "application/json",
+            "Authorization": `Bearer ${apikey}`
+        },
+        body: JSON.stringify({
+            model: "dall-e-3",
+            prompt: prompt,
+            n: 1,
+            size: "1024x1024",
+            quality: "standard"
+        })
+    });
 
-  if (!response.ok) {
-    const erro = await response.text();
-    throw new Error("Erro ao gerar imagem: " + erro);
-  }
+    if (!response.ok) {
+        const erro = await response.text();
+        throw new Error("Erro ao gerar imagem: " + erro);
+    }
 
-  const data = await response.json();
-  return data.data[0].url;
+    const data = await response.json();
+    return data.data[0].url;
 }
-
 
 document.getElementById('copiar-resultado').addEventListener('click', function () {
     const resultadoHtml = document.getElementById('conteudo-copiavel');
-
-    // Cria um elemento temporário para extrair o texto sem as tags HTML
     const temp = document.createElement("textarea");
     temp.value = resultadoHtml.innerText;
     document.body.appendChild(temp);
     temp.select();
     document.execCommand("copy");
     document.body.removeChild(temp);
-
-    // Feedback visual
     alert("Prompt copiado para a área de transferência!");
 });
 
@@ -165,3 +186,4 @@ function mostrarImagem(url) {
         </div>`;
     resultadoDiv.innerHTML += imagemHTML;
 }
+</script>
