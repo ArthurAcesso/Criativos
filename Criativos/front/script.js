@@ -41,6 +41,9 @@ document.getElementById("form-criativo").addEventListener("submit", async functi
     try {
         const criativo = await requisicaoChatGPTGOOGLE(campos, apikey);
         mostrarResultado(criativo);
+        const imagemURL = await gerarImagem(criativo, apikey);
+        mostrarImagem(imagemURL);
+
     } catch (error) {
         resultadoDiv.innerHTML = `<div class="erro">Ocorreu um erro ao gerar o prompt: ${error.message}</div>`;
     }
@@ -96,35 +99,29 @@ Exemplo de Estrutura (adaptável):
     return prompt;
 }
 
-async function requisicaoChatGPTGOOGLE(dados, apikey) {
-    const prompt = gerarPromptCriativo(dados);
+async function gerarImagem(prompt, apikey) {
+  const response = await fetch("https://api.openai.com/v1/images/generations", {
+    method: "POST",
+    headers: {
+      "Content-Type": "application/json",
+      "Authorization": `Bearer ${apikey}`
+    },
+    body: JSON.stringify({
+      model: "dall-e-3",
+      prompt: prompt,
+      n: 1,
+      size: "1024x1024",
+      quality: "standard"
+    })
+  });
 
-    const response = await fetch("https://api.openai.com/v1/chat/completions", {
-        method: "POST",
-        headers: {
-            "Content-Type": "application/json",
-            "Authorization": `Bearer ${apikey}`
-        },
-        body: JSON.stringify({
-            model: "gpt-4", 
-            messages: [
-                {
-                    role: "user",
-                    content: prompt
-                }
-            ],
-            temperature: 0.9,
-            max_tokens: 1000
-        })
-    });
+  if (!response.ok) {
+    const erro = await response.text();
+    throw new Error("Erro ao gerar imagem: " + erro);
+  }
 
-    if (!response.ok) {
-        const erro = await response.text();
-        throw new Error(erro || "Erro desconhecido");
-    }
-
-    const data = await response.json();
-    return data.choices[0].message.content.trim();
+  const data = await response.json();
+  return data.data[0].url;
 }
 
 
@@ -156,4 +153,15 @@ async function lerPDF(file) {
     }
 
     return textoFinal;
+}
+
+function mostrarImagem(url) {
+    const resultadoDiv = document.getElementById("resultado-criativo");
+    const imagemHTML = `
+        <div class="imagem-gerada">
+            <h3>Imagem Gerada:</h3>
+            <img src="${url}" alt="Imagem gerada" style="max-width: 100%; border: 1px solid #ccc; border-radius: 8px;" />
+            <a href="${url}" target="_blank" download class="botao-baixar">Baixar Imagem</a>
+        </div>`;
+    resultadoDiv.innerHTML += imagemHTML;
 }
